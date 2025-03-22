@@ -20,7 +20,7 @@ INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_opt_ HINSTANCE hPrevInstance,
                      _In_ LPWSTR    lpCmdLine,
-                     _In_ int       nCmdShow)
+                     _In_ int       nCmdShow)   //메인 함수
 {
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
@@ -38,11 +38,14 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         return FALSE;
     }
 
+    // 단축키 테이블 정보 로딩
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_WINAPISTUDY));
 
     MSG msg;
 
     // 기본 메시지 루프입니다:
+    //GetMessage : 메세지큐에서 메세지 확인 될 때까지 대기
+    //msg.message == WM_QUIT일 경우 false 반환 -> 프로그램 종료
     while (GetMessage(&msg, nullptr, 0, 0))
     {
         if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
@@ -97,6 +100,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
    hInst = hInstance; // 인스턴스 핸들을 전역 변수에 저장합니다.
 
+   // 윈도우 창 만들기(OS 관할) -> 여러 함수와 ID 존재 -> 우리(프로그래머)는 이를 이용해서 코딩해야 한다.
    HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
       CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
 
