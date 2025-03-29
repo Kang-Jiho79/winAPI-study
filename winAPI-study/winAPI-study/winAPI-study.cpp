@@ -3,6 +3,8 @@
 
 #include "framework.h"
 #include "winAPI-study.h"
+#include <vector>
+using namespace std;
 
 #define MAX_LOADSTRING 100
 
@@ -125,9 +127,16 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 //  WM_DESTROY  - 종료 메시지를 게시하고 반환합니다.
 //
 //
+struct tOBjinto {
+    POINT objPos;
+    POINT objScale;
+};
 
-POINT objPos{ 500,300 };
-POINT objScale{ 100,100 };
+vector<tOBjinto> vecInfo;
+
+POINT ptLT;
+POINT ptRB;
+bool act = false;
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message)
@@ -160,7 +169,17 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             HPEN hDefPen = (HPEN)SelectObject(hdc, hRedPen);
             HBRUSH hDefBrush = (HBRUSH)SelectObject(hdc, hBlackBrush);
 
-            Rectangle(hdc, objPos.x - objScale.x / 2, objPos.y - objScale.y / 2, objPos.x + objScale.x / 2, objPos.y + objScale.y / 2);
+            if (act) {
+                Rectangle(hdc, ptLT.x, ptLT.y, ptRB.x, ptRB.y);
+            }
+
+            for (size_t i = 0; i < vecInfo.size(); i++) {
+                Rectangle(hdc,
+                    vecInfo[i].objPos.x - vecInfo[i].objScale.x / 2,
+                    vecInfo[i].objPos.y - vecInfo[i].objScale.y / 2,
+                    vecInfo[i].objPos.x + vecInfo[i].objScale.x / 2,
+                    vecInfo[i].objPos.y + vecInfo[i].objScale.y / 2);
+            }
 
             SelectObject(hdc, hDefPen);
             SelectObject(hdc, hDefBrush);
@@ -171,6 +190,37 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         }
         break;
 
+    case WM_LBUTTONDOWN:
+    {
+        ptLT.x = LOWORD(lParam);
+        ptLT.y = HIWORD(lParam);
+        act = true;
+    }
+        break;
+
+    case WM_MOUSEMOVE:
+    {
+        ptRB.x = LOWORD(lParam);
+        ptRB.y = HIWORD(lParam);
+        InvalidateRect(hWnd, nullptr, true);
+    }
+        break;
+
+    case WM_LBUTTONUP:
+    {
+        tOBjinto info {};
+        info.objPos.x = (ptLT.x + ptRB.x) / 2;
+        info.objPos.y = (ptLT.y + ptRB.y) / 2;
+
+        info.objScale.x = abs(ptLT.x - ptRB.x);
+        info.objScale.y = abs(ptLT.y - ptRB.y);
+
+        vecInfo.push_back(info);
+        act = false;
+        InvalidateRect(hWnd, nullptr, true);
+    }
+        break;
+    /*
     case WM_KEYDOWN:
     {
         switch (wParam)
@@ -190,11 +240,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         case VK_RIGHT:
             objPos.x += 10;
             InvalidateRect(hWnd, nullptr, true);
-            break;
         }
 
     }
-        break;
+        break;*/
     case WM_DESTROY:
         PostQuitMessage(0);
         break;
