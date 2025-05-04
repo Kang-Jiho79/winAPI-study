@@ -2,8 +2,10 @@
 #include "Core.h"
 
 #include "TimeMgr.h"
-
 #include "Object.h"
+#include "KeyMgr.h"
+#include "SceneMgr.h"
+
 
 Object obj;
 
@@ -37,7 +39,8 @@ int Core::Init(HWND _handle, POINT _ptResolution)		//	class 객체가 시작할 때 초�
 
 	// Manager
 	TimeMgr::Instance()->init();
-
+	KeyMgr::Instance()->Init();
+	SceneMgr::Instance()->Init();
 
 	//	실제로 그릴 수 있는 영역을 계산한다.
 	//	메뉴바나 윈도우 창 주변으로 생겨있는 테두리 영역을 제외한 영역을 계산한다.
@@ -81,38 +84,18 @@ int Core::Init(HWND _handle, POINT _ptResolution)		//	class 객체가 시작할 때 초�
 void Core::Progress()
 {
 	TimeMgr::Instance()->Update();
-	
-	Update();
-	Render();
+	KeyMgr::Instance()->Update();
+	SceneMgr::Instance()->Update();
 
+	Rectangle(mDC, -1, -1, ptResolution.x + 1, ptResolution.y + 1);
 
-}
+	SceneMgr::Instance()->Reneder(mDC);
 
-
-// 계산
-void Core::Update()
-{
-	Vec2 vPos = obj.getPos();
-	if (GetAsyncKeyState(VK_LEFT) & 0x8000) {
-		vPos.x -= 200.f * DT;
-	}
-	if (GetAsyncKeyState(VK_RIGHT) & 0x8000) {
-		vPos.x += 200.f * DT;
-	}
-	obj.setPos(vPos);
-}
-
-
-// 그리기
-void Core::Render()
-{
-	Rectangle(hDC, -1, -1, ptResolution.x + 1, ptResolution.y + 1);
-	Vec2 vPos = obj.getPos();
-	Vec2 vScale = obj.getScale();
-	Rectangle(hDC,
-		int(vPos.x - vScale.x / 2.f),
-		int(vPos.y - vScale.y / 2.f),
-		int(vPos.x + vScale.x / 2.f),
-		int(vPos.y + vScale.y / 2.f));
 	BitBlt(hDC, 0, 0, ptResolution.x, ptResolution.y, mDC, 0, 0, SRCCOPY);
 }
+
+// Key Manager
+// : 1) A와 B물체가 이동하는 게임이다. 키매니저가 없으면 자신의 키입력을 개별적으로 처리하게 된다.
+//		수 백번의 상황 중에 A 물체는 현재 프레임(시간)에 이동을 처리하지만, B는 다음 프레임에서 이동이 처리될 수 있다.
+// : 2) 우리가
+//

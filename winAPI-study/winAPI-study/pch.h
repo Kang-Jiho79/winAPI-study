@@ -3,11 +3,17 @@
 #include <windows.h>
 #include <iostream>
 
-#include <vector>
+#include <vector>	// 3학년 1학기 STL 수강 예정
 using std::vector;
+
+#include <string>
+using std::string;	// char
+using std::wstring;	// wchar
 
 #include "define.h"
 #include "struct.h"
+
+
 
 // 미리 컴파일 된 헤더
 // 프로그램 -> 크기는 점점 커짐
