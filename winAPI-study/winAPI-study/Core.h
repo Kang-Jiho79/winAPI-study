@@ -73,6 +73,7 @@ public:
 	void		Progress();
 
 	HWND		getMainHandle() { return handle; }
+	POINT		getResolution() { return ptResolution; }
 };
 	// Manager -> 프로그램 중간에 굳이 지울 필요가 없는 애들이 주요 애들이 됨.
 	// 자주 사용하기 떄문에 매크로 지정을 할 것 (편리성)

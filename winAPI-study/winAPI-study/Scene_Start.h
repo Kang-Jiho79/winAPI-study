@@ -6,6 +6,7 @@ public:
 	Scene_Start();
 	~Scene_Start();
 
+	virtual void Update();
 	virtual void Enter();
 	virtual void Exit();
 };

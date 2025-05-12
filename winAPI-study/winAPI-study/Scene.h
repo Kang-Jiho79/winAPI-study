@@ -14,7 +14,7 @@ public:
 	void SetName(const wstring& _strName) { strName = _strName; }
 	const wstring& Getname() { return strName; }
 
-	void Update();
+	virtual void Update();
 	void Render(HDC _hdc);
 
 	virtual void Enter() = 0;
@@ -25,5 +25,6 @@ protected:
 	{
 		arrObj[(UINT)type].push_back(obj);
 	}
+	Object* getPlayer();
 };
 

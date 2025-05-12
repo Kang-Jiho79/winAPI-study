@@ -38,3 +38,11 @@ void Scene::Enter()
 void Scene::Exit()
 {
 }
+
+Object* Scene::getPlayer()
+{
+	for (UINT i = 0; i < (UINT)GROUP_TYPE::END; ++i) {
+		if (i == (UINT)GROUP_TYPE::PLAYER)
+			return arrObj[i][0];
+	}
+}

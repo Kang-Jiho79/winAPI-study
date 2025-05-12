@@ -7,8 +7,6 @@
 #include "SceneMgr.h"
 
 
-Object obj;
-
 Core::Core()	//	변수 초기화
 	:handle(0)
 	, ptResolution{}
@@ -74,9 +72,6 @@ int Core::Init(HWND _handle, POINT _ptResolution)		//	class 객체가 시작할 때 초�
 	DeleteObject(hOldBIt);
 
 	
-
-	obj.setPos(Vec2(float(ptResolution.x / 2), float(ptResolution.y / 2)));
-	obj.setScale(Vec2(100, 100));
 	return S_OK;	// HRESULT
 }
 
